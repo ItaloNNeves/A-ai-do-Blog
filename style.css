@@ -33,8 +33,8 @@ header {
     list-style: none;
     background-color: #903d74e1;
     padding: 20px;
-    border-radius: 40px;
-    transition: .2s ease-in-out;
+    border-radius: 20px;
+    transition: .1s ease-in-out;
     /* opacity: 0; */
     li{
         
@@ -72,7 +72,7 @@ header {
 }
 .lishe.active {
     bottom: -280px;
-    transition: .5s ease-in-out;
+    /* transition: .5s ease-in-out; */
 }
 .imglog{
     
@@ -99,7 +99,7 @@ header {
     color: white;
     padding: 5px 20px;
     border-radius: 10px;
-    background-image: linear-gradient(to right, #903D75, #903d74f5);
+    background-image: linear-gradient(to right, #be4696, #b182a1f5);
 }
 
 .barramenu {
@@ -198,25 +198,24 @@ main {
         width: fit-content;
     }
 }
+.imgber{
+    width: 100%;
+    overflow: hidden;
+}
 .imgbnn{
     display: flex;
-    height: 400px;
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-    align-items: center;
+    
     
 }
-.imgbnn img{
-width: 340px;
-border-radius: 40px;
-transform: rotate(10deg);
-aspect-ratio: 1/1;
-object-fit: cover;
-margin-left: 40px;
-/* margin-bottom: 40px; */
-position: absolute;
+.imgsbox{
+  min-width: 100%;
+ 
+    img{
+        width: 100%;
+        
+    }
 }
+
 .saboresgar{
     background-color:#F3F0EF ;
     padding: 50px 0 0;
@@ -250,7 +249,10 @@ h3{
         border-radius: 50%;
         width: 44px;
         height: 44px;
-        
+    }
+    div:hover{
+        background-color: #e4e2e2;
+        transition: 1s ease-in-out;
     }
 }
 .boxsabores{
@@ -259,6 +261,7 @@ h3{
    gap: 30px;
    overflow-x: auto;
    scrollbar-width: none;
+   scroll-behavior: smooth;
 }
 .uni-box-sab{
     display: flex;
