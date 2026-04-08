@@ -5,6 +5,7 @@
     margin: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
+    scroll-behavior: smooth;
 }
 
 body {
@@ -355,7 +356,75 @@ h4 {
 .addprod i {
     font-size: 24px;
 }
+.modalinfo {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 10003;
+}
 
+.modalinfo.ativo {
+    display: flex;
+}
+
+.modalinfo-box {
+    width: 100%;
+    max-width: 500px;
+    background: #fff;
+    border-radius: 30px;
+    padding: 28px 24px;
+    position: relative;
+    max-height: 70vh;
+    overflow-y: auto;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+.booxxmod{
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.fecharmodalinfo {
+    /* position: absolute; */
+    /* top: 14px;
+    right: 16px; */
+    border: none;
+    background: #b8b8b86b;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    /* padding: 5px; */
+    font-size: 30px;
+    color: #903D75;
+    cursor: pointer;
+}
+
+.modalinfo-box h3 {
+    font-size: 28px;
+    color: #903D75;
+    /* margin-bottom: 18px; */
+}
+
+.conteudo-info {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.conteudo-info p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #2f2f2e;
+}
 /* MODAIS */
 .modalpedido,
 .modalcarrinho,
@@ -649,4 +718,28 @@ h4 {
 
 .stars i {
     color: rgb(231, 189, 0);
+}
+footer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+    background-color: #e4e2e2;
+    padding: 30px;
+    border-radius: 40px 40px 0 0 ;
+    h2{
+        color: #a04d84a6;
+    }
+    a{
+        text-decoration: none;
+        font-size: 30px;
+        color: #2f2f2e;
+    }
+    p{
+        font-size: 12px;
+    }
+}
+@media screen and (min-width: 750px){
+    
 }

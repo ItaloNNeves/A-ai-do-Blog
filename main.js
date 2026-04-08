@@ -48,6 +48,10 @@ setInterval(function () {
   dots[index].classList.add("active");
 }, 3000);
 
+// CONFIGURACOES DA LOJA
+const whatsappLoja = "55759"; // troque pelo numero da loja com 55 + DDD + numero
+const chavePix = "SUA-CHAVE-PIX-AQUI"; // troque pela sua chave Pix
+
 // MODAL PRODUTO
 const addBtns = document.querySelectorAll(".addprod");
 const modal = document.getElementById("modalpedido");
@@ -99,13 +103,17 @@ let preco500 = 20;
 let carrinho = [];
 let dadosCliente = null;
 
-// FUNÇÕES
+// FUNCOES
+function formatarMoeda(valor) {
+  return `R$ ${valor.toFixed(2).replace(".", ",")}`;
+}
+
 function atualizarTotal() {
   qtd300El.textContent = qtd300;
   qtd500El.textContent = qtd500;
 
   const total = (qtd300 * preco300) + (qtd500 * preco500);
-  totalPedidoEl.textContent = `R$ ${total.toFixed(2).replace(".", ",")}`;
+  totalPedidoEl.textContent = formatarMoeda(total);
 }
 
 function resetarModalProduto() {
@@ -137,21 +145,21 @@ function renderizarCarrinho() {
 
   let totalGeral = 0;
 
-  carrinho.forEach(function (item, index) {
+  carrinho.forEach(function (item) {
     totalGeral += item.total;
 
     listaCarrinho.innerHTML += `
       <div class="item-carrinho">
         <h4>${item.produto.nome}</h4>
-        ${item.qtd300 > 0 ? `<p>300ml x ${item.qtd300} = R$ ${(item.qtd300 * item.preco300).toFixed(2).replace(".", ",")}</p>` : ""}
-        ${item.qtd500 > 0 ? `<p>500ml x ${item.qtd500} = R$ ${(item.qtd500 * item.preco500).toFixed(2).replace(".", ",")}</p>` : ""}
-        <p><strong>Total do item: R$ ${item.total.toFixed(2).replace(".", ",")}</strong></p>
+        ${item.qtd300 > 0 ? `<p>300ml x ${item.qtd300} = ${formatarMoeda(item.qtd300 * item.preco300)}</p>` : ""}
+        ${item.qtd500 > 0 ? `<p>500ml x ${item.qtd500} = ${formatarMoeda(item.qtd500 * item.preco500)}</p>` : ""}
+        <p><strong>Total do item: ${formatarMoeda(item.total)}</strong></p>
       </div>
     `;
   });
 
-  totalCarrinhoEl.textContent = `R$ ${totalGeral.toFixed(2).replace(".", ",")}`;
-  totalPagamento.textContent = `R$ ${totalGeral.toFixed(2).replace(".", ",")}`;
+  totalCarrinhoEl.textContent = formatarMoeda(totalGeral);
+  totalPagamento.textContent = formatarMoeda(totalGeral);
 }
 
 function calcularTotalCarrinho() {
@@ -190,6 +198,26 @@ function gerarResumoPedido() {
       totalItem: item.total
     };
   });
+}
+
+function montarTextoItensCarrinho() {
+  let texto = "";
+
+  carrinho.forEach(function (item) {
+    texto += `*${item.produto.nome}*\n`;
+
+    if (item.qtd300 > 0) {
+      texto += `- 300ml x ${item.qtd300} = ${formatarMoeda(item.qtd300 * item.preco300)}\n`;
+    }
+
+    if (item.qtd500 > 0) {
+      texto += `- 500ml x ${item.qtd500} = ${formatarMoeda(item.qtd500 * item.preco500)}\n`;
+    }
+
+    texto += `Subtotal: ${formatarMoeda(item.total)}\n\n`;
+  });
+
+  return texto;
 }
 
 // ABRIR PRODUTO
@@ -301,7 +329,7 @@ fecharDados.addEventListener("click", function () {
   modalDados.classList.remove("ativo");
 });
 
-// FORMULÁRIO DE DADOS
+// FORMULARIO DE DADOS
 formDadosCliente.addEventListener("submit", function (e) {
   e.preventDefault();
 
@@ -345,8 +373,8 @@ document.querySelectorAll('input[name="pagamento"]').forEach(function (radio) {
       detalhesPagamento.innerHTML = `
         <div class="box-pix">
           <p><strong>Pagamento via Pix</strong></p>
-          <p>Chave Pix: SUA-CHAVE-PIX-AQUI</p>
-          <p>Depois você pode substituir essa área por QR Code real.</p>
+          <p>Chave Pix: ${chavePix}</p>
+          <p>Ao enviar o pedido no WhatsApp, a chave Pix também vai junto na mensagem.</p>
         </div>
       `;
     }
@@ -372,7 +400,7 @@ document.querySelectorAll('input[name="pagamento"]').forEach(function (radio) {
   });
 });
 
-// CONFIRMAR PEDIDO
+// ENVIAR PEDIDO PARA O WHATSAPP
 formPagamento.addEventListener("submit", function (e) {
   e.preventDefault();
 
@@ -384,18 +412,35 @@ formPagamento.addEventListener("submit", function (e) {
   }
 
   let trocoPara = "";
+  let infoPagamento = "";
+
+  if (metodoSelecionado.value === "pix") {
+    infoPagamento = `Pix\nChave Pix: ${chavePix}`;
+  }
+
+  if (metodoSelecionado.value === "cartao") {
+    infoPagamento = "Cartão";
+  }
 
   if (metodoSelecionado.value === "dinheiro") {
     const campoTroco = document.getElementById("trocoPara");
-    trocoPara = campoTroco ? campoTroco.value : "";
+    trocoPara = campoTroco ? campoTroco.value.trim() : "";
+
+    infoPagamento = "Dinheiro";
+
+    if (trocoPara !== "") {
+      infoPagamento += `\nTroco para: ${trocoPara}`;
+    }
   }
+
+  const totalPedido = calcularTotalCarrinho();
 
   const pedidoFinal = {
     idPedido: "PED-" + Date.now(),
     data: new Date().toISOString(),
     cliente: dadosCliente,
     itens: gerarResumoPedido(),
-    total: calcularTotalCarrinho(),
+    total: totalPedido,
     pagamento: {
       metodo: metodoSelecionado.value,
       trocoPara: trocoPara || null,
@@ -406,9 +451,26 @@ formPagamento.addEventListener("submit", function (e) {
 
   localStorage.setItem("pedidoFinal", JSON.stringify(pedidoFinal));
 
-  console.log("Pedido final:", pedidoFinal);
+  const mensagem =
+`Olá! Quero fazer este pedido:
 
-  alert("Pedido confirmado com sucesso!");
+${montarTextoItensCarrinho()}*Total do pedido:* ${formatarMoeda(totalPedido)}
+
+*Dados do cliente*
+Nome: ${dadosCliente.nome}
+Apelido: ${dadosCliente.apelido || "-"}
+Telefone: ${dadosCliente.telefone}
+Rua: ${dadosCliente.rua}
+Bairro: ${dadosCliente.bairro}
+Número: ${dadosCliente.numero}
+Referência: ${dadosCliente.referencia || "-"}
+
+*Forma de pagamento*
+${infoPagamento}`;
+
+  const linkWhatsApp = `https://wa.me/${whatsappLoja}?text=${encodeURIComponent(mensagem)}`;
+
+  window.open(linkWhatsApp, "_blank");
 
   modalPagamento.classList.remove("ativo");
   formDadosCliente.reset();
@@ -418,4 +480,35 @@ formPagamento.addEventListener("submit", function (e) {
   carrinho = [];
   atualizarCarrinhoBar();
   renderizarCarrinho();
+});
+// MODAIS DE INFORMACAO
+const abrirBeneficios = document.getElementById("abrirBeneficios");
+const abrirHistoria = document.getElementById("abrirHistoria");
+
+const modalBeneficios = document.getElementById("modalBeneficios");
+const modalHistoria = document.getElementById("modalHistoria");
+
+const fecharBeneficios = document.getElementById("fecharBeneficios");
+const fecharHistoria = document.getElementById("fecharHistoria");
+
+abrirBeneficios.addEventListener("click", function (e) {
+  e.preventDefault();
+  menu.classList.remove("active");
+  btn.classList.remove("active");
+  modalBeneficios.classList.add("ativo");
+});
+
+abrirHistoria.addEventListener("click", function (e) {
+  e.preventDefault();
+  menu.classList.remove("active");
+  btn.classList.remove("active");
+  modalHistoria.classList.add("ativo");
+});
+
+fecharBeneficios.addEventListener("click", function () {
+  modalBeneficios.classList.remove("ativo");
+});
+
+fecharHistoria.addEventListener("click", function () {
+  modalHistoria.classList.remove("ativo");
 });

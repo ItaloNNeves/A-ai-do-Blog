@@ -4,10 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Açaí do Blog</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -20,9 +18,9 @@
 
         <ul class="lishe">
             <li><a class="a1" href="#">Início</a></li>
-            <li><a class="a1" href="#">Cardápio</a></li>
-            <li><a class="a1" href="#">Benefícios</a></li>
-            <li><a class="a1" href="#">Nossa História</a></li>
+            <li><a class="a1" href="#sbid">Cardápio</a></li>
+            <li><a class="a1" href="#" id="abrirBeneficios">Benefícios</a></li>
+            <li><a class="a1" href="#" id="abrirHistoria">Nossa História</a></li>
             <li><a href="#" class="bntpdr">Pedir Agora</a></li>
         </ul>
 
@@ -37,7 +35,7 @@
                 <p class="p1">energia natural em cada garrafa</p>
                 <h2>Impossível Resistir.</h2>
                 <p class="p2">Prático, gelado e cheio de sabor. Uma nova forma de viver o açaí no seu dia a dia.</p>
-                <a href="#" class="vercard">Ver Cardápio</a>
+                <a href="#sbid" class="vercard">Ver Cardápio</a>
             </div>
 
             <div class="imgber">
@@ -65,7 +63,7 @@
             </div>
         </div>
 
-        <div class="saboresgar">
+        <div class="saboresgar" id="sbid">
             <div class="titlesabores">
                 <h3>Sabores</h3>
                 <div class="seta">
@@ -75,28 +73,33 @@
             </div>
 
             <div class="boxsabores">
-                <article class="uni-box-sab" data-id="1" data-nome="Açaí com Nutella" data-preco300="15" data-preco500="20">
+                <article class="uni-box-sab" data-id="1" data-nome="Açaí com Nutella" data-preco300="15"
+                    data-preco500="20">
                     <p class="toplever">Mais vendido</p>
                     <img class="img-produc" src="./imagens/img-cai2.png" alt="">
                     <h4>Açaí com Nutella</h4>
-                    <p class="desc-box">Açaí cremoso batido com leite, recheado com Nutella para um sabor intenso e irresistível.</p>
+                    <p class="desc-box">Açaí cremoso batido com leite, recheado com Nutella para um sabor intenso e
+                        irresistível.</p>
                     <div class="price-add">
                         <p class="price">R$15-R$20</p>
                         <a class="addprod" href="#"><i class="fa-solid fa-plus"></i></a>
                     </div>
                 </article>
 
-                <article class="uni-box-sab" data-id="2" data-nome="Açaí com Maracujá" data-preco300="15" data-preco500="20">
+                <article class="uni-box-sab" data-id="2" data-nome="Açaí com Maracujá" data-preco300="15"
+                    data-preco500="20">
                     <img class="img-produc" src="./imagens/img-cai3.png" alt="">
                     <h4>Açaí com Maracujá</h4>
-                    <p class="desc-box">Açaí com mousse de maracujá, combinando o doce com um toque cítrico refrescante.</p>
+                    <p class="desc-box">Açaí com mousse de maracujá, combinando o doce com um toque cítrico refrescante.
+                    </p>
                     <div class="price-add">
                         <p class="price">R$15-R$20</p>
                         <a class="addprod" href="#"><i class="fa-solid fa-plus"></i></a>
                     </div>
                 </article>
 
-                <article class="uni-box-sab" data-id="3" data-nome="Açaí com Morango" data-preco300="15" data-preco500="20">
+                <article class="uni-box-sab" data-id="3" data-nome="Açaí com Morango" data-preco300="15"
+                    data-preco500="20">
                     <img class="img-produc" src="./imagens/img-cai4.png" alt="">
                     <h4>Açaí com Morango</h4>
                     <p class="desc-box">Açaí batido com leite e mousse de morango, leve, doce e equilibrado.</p>
@@ -106,7 +109,8 @@
                     </div>
                 </article>
 
-                <article class="uni-box-sab" data-id="4" data-nome="Açaí com Limão" data-preco300="15" data-preco500="20">
+                <article class="uni-box-sab" data-id="4" data-nome="Açaí com Limão" data-preco300="15"
+                    data-preco500="20">
                     <img class="img-produc" src="./imagens/img-cai1.png" alt="">
                     <h4>Açaí com Limão</h4>
                     <p class="desc-box">Açaí com mousse de limão, refrescante e perfeito para qualquer momento.</p>
@@ -201,7 +205,8 @@
                 <form id="formDadosCliente" class="formpedido">
                     <input type="text" id="nomeCliente" placeholder="Seu nome" required>
                     <input type="text" id="apelidoCliente" placeholder="Apelido">
-                    <input type="tel" id="telefoneCliente" placeholder="Telefone com DDD (ex: 11987654321)" inputmode="numeric" required>
+                    <input type="tel" id="telefoneCliente" placeholder="Telefone com DDD (ex: 11987654321)"
+                        inputmode="numeric" required>
                     <input type="text" id="ruaCliente" placeholder="Nome da rua" required>
                     <input type="text" id="bairroCliente" placeholder="Bairro" required>
                     <input type="text" id="numeroCasa" placeholder="Número da casa" required>
@@ -245,13 +250,81 @@
                 </form>
             </div>
         </div>
+        <!-- MODAL BENEFICIOS -->
+        <div class="modalinfo" id="modalBeneficios">
+            <div class="modalinfo-box">
+                <div class="booxxmod">
+                    <button class="fecharmodalinfo" id="fecharBeneficios">&times;</button>
+                <h3>Benefícios</h3>
+                </div>
 
+                <div class="conteudo-info">
+                    <p>
+                        O açaí em garrafa é uma opção prática para quem quer consumir algo gelado, saboroso e fácil de
+                        levar para diferentes momentos do dia.
+                    </p>
+
+                    <p>
+                        Além da praticidade, ele permite variar os sabores e escolher combinações que agradam diferentes
+                        gostos, como opções com Nutella, morango, limão e maracujá.
+                    </p>
+
+                    <p>
+                        Outro ponto positivo é a experiência de consumo: o produto já vem pronto, bem armazenado e
+                        pensado para quem busca rapidez sem abrir mão do sabor.
+                    </p>
+
+                    <p>
+                        Para quem gosta de sobremesas geladas ou quer uma opção diferente para o dia a dia, o açaí na
+                        garrafa se destaca pela conveniência, pela cremosidade e pela variedade de sabores.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL NOSSA HISTORIA -->
+        <div class="modalinfo" id="modalHistoria">
+            <div class="modalinfo-box">
+                <div class="booxxmod">
+                    <button class="fecharmodalinfo" id="fecharHistoria">&times;</button>
+                <h3>Nossa História</h3>
+                </div>
+
+                <div class="conteudo-info">
+                    <p>
+                        A Açaí do Blog nasceu da vontade de transformar uma ideia simples em algo especial. Fundada por
+                        Nilton Lobo, de 22 anos, a marca começou sua trajetória no dia 29 de janeiro, com o propósito de
+                        oferecer uma nova forma de consumir açaí: prática, saborosa e feita para acompanhar a rotina das
+                        pessoas.
+                    </p>
+
+                    <p>
+                        Desde o início, a proposta foi unir conveniência e qualidade em um produto que pudesse ser
+                        levado com facilidade e ainda assim entregasse uma experiência marcante em sabor, textura e
+                        apresentação.
+                    </p>
+
+                    <p>
+                        Com espírito empreendedor e muita dedicação, o projeto foi ganhando forma a partir da busca por
+                        uma identidade própria, com atenção aos detalhes, aos sabores e à experiência de quem escolhe a
+                        marca.
+                    </p>
+
+                    <p>
+                        Mais do que vender açaí, a ideia é construir uma marca próxima das pessoas, com personalidade,
+                        cuidado e vontade de crescer de forma consistente, sempre valorizando cada pedido e cada
+                        cliente.
+                    </p>
+                </div>
+            </div>
+        </div>
         <div class="avl">
             <h4>Feedbacks de clientes</h4>
 
             <article class="boxavl">
                 <i class="fa-solid fa-quote-left asp"></i>
-                <p class="txtavl">"Sério, não esperava me surpreender tanto. O sabor é muito mais intenso do que qualquer outro açaí que já provei. Dá pra ver que tem cuidado em cada detalhe."</p>
+                <p class="txtavl">"Sério, não esperava me surpreender tanto. O sabor é muito mais intenso do que
+                    qualquer outro açaí que já provei. Dá pra ver que tem cuidado em cada detalhe."</p>
                 <div class="profileavl">
                     <img src="./imagens/profile-avl1.png" alt="">
                     <div class="info-uso-pro">
@@ -269,7 +342,8 @@
 
             <article class="boxavl">
                 <i class="fa-solid fa-quote-left asp"></i>
-                <p class="txtavl">"Virei cliente depois da primeira compra. A entrega foi rápida e o açaí chegou perfeito. Agora virou meu pedido fixo no fim de semana."</p>
+                <p class="txtavl">"Virei cliente depois da primeira compra. A entrega foi rápida e o açaí chegou
+                    perfeito. Agora virou meu pedido fixo no fim de semana."</p>
                 <div class="profileavl">
                     <img src="./imagens/profile-avl2.png" alt="">
                     <div class="info-uso-pro">
@@ -287,7 +361,8 @@
 
             <article class="boxavl">
                 <i class="fa-solid fa-quote-left asp"></i>
-                <p class="txtavl">"Eu já tinha testado várias marcas, mas essa realmente me conquistou. É leve, cremoso e não é enjoativo. Dá vontade de pedir sempre."</p>
+                <p class="txtavl">"Eu já tinha testado várias marcas, mas essa realmente me conquistou. É leve, cremoso
+                    e não é enjoativo. Dá vontade de pedir sempre."</p>
                 <div class="profileavl">
                     <img src="./imagens/profile-avl3.png" alt="">
                     <div class="info-uso-pro">
@@ -304,7 +379,12 @@
             </article>
         </div>
     </main>
-
+    <footer>
+        <h2> Açai do Blog </h2>
+        <a target="_blank" href="https://www.instagram.com/acai_do_blog/" class="icon-insta"><i
+                class="fa-brands fa-instagram"></i></a>
+        <p>&copy; Açai do Blog - Nilton Lobo. Todos os direitos reservados.</p>
+    </footer>
     <script src="./main.js"></script>
 </body>
 
