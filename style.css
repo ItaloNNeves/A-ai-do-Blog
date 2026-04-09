@@ -55,6 +55,9 @@ header {
 .lishe a:hover {
     color: #2f2f2e;
 }
+ .aa2{
+            display: none;
+        }
 
 .lishe .a1::after {
     content: "";
@@ -356,6 +359,7 @@ h4 {
 .addprod i {
     font-size: 24px;
 }
+
 .modalinfo {
     position: fixed;
     inset: 0;
@@ -382,6 +386,7 @@ h4 {
     overflow-y: auto;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
+
 .booxxmod{
     display: flex;
     flex-direction: row-reverse;
@@ -391,9 +396,6 @@ h4 {
 }
 
 .fecharmodalinfo {
-    /* position: absolute; */
-    /* top: 14px;
-    right: 16px; */
     border: none;
     background: #b8b8b86b;
     width: 30px;
@@ -402,7 +404,6 @@ h4 {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    /* padding: 5px; */
     font-size: 30px;
     color: #903D75;
     cursor: pointer;
@@ -411,7 +412,6 @@ h4 {
 .modalinfo-box h3 {
     font-size: 28px;
     color: #903D75;
-    /* margin-bottom: 18px; */
 }
 
 .conteudo-info {
@@ -425,7 +425,7 @@ h4 {
     line-height: 1.7;
     color: #2f2f2e;
 }
-/* MODAIS */
+
 .modalpedido,
 .modalcarrinho,
 .modaldados,
@@ -556,7 +556,6 @@ h4 {
     border-color: #903D75;
 }
 
-/* CARRINHO FIXO */
 .carrinho-bar {
     position: fixed;
     left: 20px;
@@ -622,7 +621,6 @@ h4 {
     color: #444;
 }
 
-/* PAGAMENTO */
 .opcao-pagamento {
     display: flex;
     align-items: center;
@@ -658,7 +656,6 @@ h4 {
     font-size: 18px;
 }
 
-/* AVALIAÇÕES */
 .avl {
     padding: 30px 20px;
     display: flex;
@@ -719,6 +716,7 @@ h4 {
 .stars i {
     color: rgb(231, 189, 0);
 }
+
 footer{
     display: flex;
     flex-direction: column;
@@ -728,18 +726,259 @@ footer{
     background-color: #e4e2e2;
     padding: 30px;
     border-radius: 40px 40px 0 0 ;
-    h2{
-        color: #a04d84a6;
+}
+
+footer h2{
+    color: #a04d84a6;
+}
+
+footer a{
+    text-decoration: none;
+    font-size: 30px;
+    color: #2f2f2e;
+}
+
+footer p{
+    font-size: 12px;
+}
+
+/* AREA PIX */
+.box-pix {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pix-qrcode-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.pix-qrcode-area img {
+    width: 220px;
+    max-width: 100%;
+    border-radius: 16px;
+    background: white;
+    padding: 10px;
+    border: 1px solid #e5e5e5;
+}
+
+.pix-chave-box {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    padding: 12px;
+    word-break: break-word;
+}
+
+.btn-copiar-pix {
+    border: none;
+    background: #903D75;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: .2s ease-in-out;
+}
+
+.btn-copiar-pix:hover {
+    opacity: 0.9;
+}
+
+.aviso-pix {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #444;
+    background: #fff;
+    padding: 12px;
+    border-radius: 12px;
+    border-left: 4px solid #903D75;
+}
+
+/* RESPONSIVIDADE */
+@media screen and (min-width: 750px) {
+    header {
+        padding: 14px 40px;
+        img{
+            margin-right: 20px;
+        }
+        
     }
-    a{
-        text-decoration: none;
-        font-size: 30px;
+
+    .aa2{
+        white-space: nowrap;
+    }
+    .dbaction {
+        display: none;
+    }
+
+    .lishe {
+        position: static;
+        flex-direction: row;
+        align-items: center;
+        /* justify-content: flex-end; */
+        gap: 24px;
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        right: auto;
+        bottom: auto;
+        a{
+            white-space: nowrap;
+        }
+    }
+    .aa1{
+        display: none;
+    }
+    .aa2{
+        display: inherit;
+    }
+
+    .lishe.active {
+        bottom: auto;
+    }
+
+    .lishe a {
         color: #2f2f2e;
     }
-    p{
-        font-size: 12px;
+
+    .lishe .a1::after {
+        background-color: #903D75;
+    }
+
+    .banner {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 40px;
+        /* padding: 20px 40px 0; */
+        /* min-height: calc(100vh - 110px); */
+        
+    }
+
+    .txtbnn,
+    .imgber {
+        width: 50%;
+    }
+
+    .txtbnn {
+        margin-bottom: 0;
+    }
+
+    .txtbnn h2 {
+        font-size: 64px;
+    }
+
+    .txtbnn .p2 {
+        max-width: 560px;
+    }
+
+    .saboresgar {
+        padding: 60px 40px 0;
+    }
+
+    .titlesabores {
+        padding: 0;
+    }
+
+    .boxsabores {
+        /* padding: 30px 0;
+        flex-wrap: wrap;
+        overflow-x: visible; */
+        justify-content: start;
+    }
+    
+    .uni-box-sab {
+        /* width: calc(50% - 15px);
+        max-width: 320px; */
+    }
+
+    .avl {
+        padding: 60px 40px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: stretch;
+    }
+
+    .avl h4 {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .boxavl {
+        width: calc(33.333% - 20px);
+        min-width: 280px;
+        max-width: 360px;
+    }
+
+    footer {
+        padding: 40px;
     }
 }
-@media screen and (min-width: 750px){
-    
+
+@media screen and (min-width: 1024px) {
+    header {
+        padding: 16px 60px;
+    }
+
+    .banner {
+        padding: 30px 60px 0;
+        gap: 60px;
+        flex-direction: row;
+    }
+.titlesabores{
+    padding: 0 250px;
+    width: 100%;
+}
+    .txtbnn h2 {
+        font-size: 78px;
+    }
+
+    .txtbnn .p1 {
+        font-size: 14px;
+    }
+
+    .txtbnn .p2 {
+        font-size: 20px;
+    }
+
+    .saboresgar {
+        padding: 70px 60px 0;
+    }
+    .saboresgar{
+        /* justify-content: center; */
+        align-items: center;
+    }
+
+
+    .boxsabores {
+        /* justify-content: space-between; */
+    }
+
+    .uni-box-sab {
+        /* width: calc(25% - 23px);
+        max-width: none; */
+    }
+
+    .avl {
+        padding: 70px 60px;
+        gap: 24px;
+    }
+
+    .boxavl {
+        width: calc(33.333% - 16px);
+    }
+
+    .modalbox,
+    .modalcarrinho-box,
+    .modaldados-box,
+    .modalpagamento-box {
+        max-width: 520px;
+    }
 }

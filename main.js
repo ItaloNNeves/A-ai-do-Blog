@@ -2,14 +2,31 @@
 const btn = document.querySelector(".dbaction");
 const menu = document.querySelector(".lishe");
 
-btn.addEventListener("click", function () {
-  btn.classList.toggle("active");
-  menu.classList.toggle("active");
-});
+function telaMaior() {
+  return window.innerWidth >= 750;
+}
 
-menu.addEventListener("click", function () {
-  btn.classList.remove("active");
-  menu.classList.remove("active");
+if (btn) {
+  btn.addEventListener("click", function () {
+    if (telaMaior()) return;
+    btn.classList.toggle("active");
+    menu.classList.toggle("active");
+  });
+}
+
+if (menu) {
+  menu.addEventListener("click", function () {
+    if (telaMaior()) return;
+    btn.classList.remove("active");
+    menu.classList.remove("active");
+  });
+}
+
+window.addEventListener("resize", function () {
+  if (telaMaior()) {
+    btn.classList.remove("active");
+    menu.classList.remove("active");
+  }
 });
 
 // ROLAGEM HORIZONTAL
@@ -17,13 +34,17 @@ const cards = document.querySelector(".boxsabores");
 const esq = document.querySelector(".setleft");
 const dir = document.querySelector(".setright");
 
-dir.addEventListener("click", function () {
-  cards.scrollLeft += 300;
-});
+if (dir) {
+  dir.addEventListener("click", function () {
+    cards.scrollLeft += 300;
+  });
+}
 
-esq.addEventListener("click", function () {
-  cards.scrollLeft -= 300;
-});
+if (esq) {
+  esq.addEventListener("click", function () {
+    cards.scrollLeft -= 300;
+  });
+}
 
 // BANNER
 const slider = document.querySelector(".imgbnn");
@@ -32,25 +53,29 @@ const dots = document.querySelectorAll(".dot");
 
 let index = 0;
 
-setInterval(function () {
-  index++;
+if (slider && totalSlides > 0 && dots.length > 0) {
+  setInterval(function () {
+    index++;
 
-  if (index >= totalSlides) {
-    index = 0;
-  }
+    if (index >= totalSlides) {
+      index = 0;
+    }
 
-  slider.style.transform = `translateX(-${index * 100}%)`;
+    slider.style.transform = `translateX(-${index * 100}%)`;
 
-  dots.forEach(function (dot) {
-    dot.classList.remove("active");
-  });
+    dots.forEach(function (dot) {
+      dot.classList.remove("active");
+    });
 
-  dots[index].classList.add("active");
-}, 3000);
+    dots[index].classList.add("active");
+  }, 3000);
+}
 
 // CONFIGURACOES DA LOJA
-const whatsappLoja = "55759"; // troque pelo numero da loja com 55 + DDD + numero
-const chavePix = "SUA-CHAVE-PIX-AQUI"; // troque pela sua chave Pix
+const whatsappLoja = "5575981449511";
+const chavePix = "75982988444";
+const nomeRecebedorPix = "ACAI DO BLOG";
+const cidadeRecebedorPix = "SALVADOR";
 
 // MODAL PRODUTO
 const addBtns = document.querySelectorAll(".addprod");
@@ -220,6 +245,124 @@ function montarTextoItensCarrinho() {
   return texto;
 }
 
+function removerAcentos(texto) {
+  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function somenteNumeros(texto) {
+  return texto.replace(/\D/g, "");
+}
+
+function formatarCampoPix(id, valor) {
+  const tamanho = String(valor.length).padStart(2, "0");
+  return id + tamanho + valor;
+}
+
+function calcularCRC16(payload) {
+  let polinomio = 0x1021;
+  let resultado = 0xFFFF;
+
+  for (let i = 0; i < payload.length; i++) {
+    resultado ^= payload.charCodeAt(i) << 8;
+
+    for (let j = 0; j < 8; j++) {
+      if ((resultado & 0x8000) !== 0) {
+        resultado = (resultado << 1) ^ polinomio;
+      } else {
+        resultado <<= 1;
+      }
+
+      resultado &= 0xFFFF;
+    }
+  }
+
+  return resultado.toString(16).toUpperCase().padStart(4, "0");
+}
+
+function gerarPayloadPix(chave, nome, cidade, valor = null) {
+  const chaveLimpa = chave.trim();
+  const nomeLimpo = removerAcentos(nome).toUpperCase().slice(0, 25);
+  const cidadeLimpa = removerAcentos(cidade).toUpperCase().slice(0, 15);
+
+  const gui = formatarCampoPix("00", "BR.GOV.BCB.PIX");
+  const chaveCampo = formatarCampoPix("01", chaveLimpa);
+  const merchantAccountInfo = formatarCampoPix("26", gui + chaveCampo);
+
+  const payloadFormatIndicator = "000201";
+  const pointOfInitiationMethod = "010211";
+  const merchantCategoryCode = "52040000";
+  const transactionCurrency = "5303986";
+
+  const transactionAmount = valor
+    ? formatarCampoPix("54", Number(valor).toFixed(2))
+    : "";
+
+  const countryCode = "5802BR";
+  const merchantName = formatarCampoPix("59", nomeLimpo);
+  const merchantCity = formatarCampoPix("60", cidadeLimpa);
+  const additionalDataField = formatarCampoPix("62", formatarCampoPix("05", "***"));
+
+  const semCRC =
+    payloadFormatIndicator +
+    pointOfInitiationMethod +
+    merchantAccountInfo +
+    merchantCategoryCode +
+    transactionCurrency +
+    transactionAmount +
+    countryCode +
+    merchantName +
+    merchantCity +
+    additionalDataField +
+    "6304";
+
+  const crc = calcularCRC16(semCRC);
+  return semCRC + crc;
+}
+
+function gerarUrlQrCode(texto) {
+  return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(texto)}`;
+}
+
+function renderizarDetalhesPix() {
+  const payloadPix = gerarPayloadPix(chavePix, nomeRecebedorPix, cidadeRecebedorPix);
+
+  detalhesPagamento.innerHTML = `
+    <div class="box-pix">
+      <p><strong>Pagamento via Pix</strong></p>
+      <p>Escaneie o QR Code abaixo ou copie a chave Pix.</p>
+
+      <div class="pix-qrcode-area">
+        <img src="${gerarUrlQrCode(payloadPix)}" alt="QR Code Pix">
+      </div>
+
+      <div class="pix-chave-box">
+        <strong>Chave Pix:</strong><br>
+        <span id="textoChavePix">${chavePix}</span>
+      </div>
+
+      <button type="button" class="btn-copiar-pix" id="btnCopiarPix">Copiar chave Pix</button>
+
+      <div class="aviso-pix">
+        Após o pagamento, envie o comprovante no WhatsApp para agilizar a confirmação do seu pedido.
+      </div>
+    </div>
+  `;
+
+  const btnCopiarPix = document.getElementById("btnCopiarPix");
+
+  btnCopiarPix.addEventListener("click", async function () {
+    try {
+      await navigator.clipboard.writeText(chavePix);
+      btnCopiarPix.textContent = "Chave Pix copiada!";
+      setTimeout(function () {
+        btnCopiarPix.textContent = "Copiar chave Pix";
+      }, 2000);
+    } catch (erro) {
+      alert("Não foi possível copiar automaticamente. Copie manualmente a chave Pix.");
+    }
+  });
+}
+
 // ABRIR PRODUTO
 addBtns.forEach(function (botao) {
   botao.addEventListener("click", function (e) {
@@ -370,13 +513,7 @@ document.querySelectorAll('input[name="pagamento"]').forEach(function (radio) {
     const metodo = this.value;
 
     if (metodo === "pix") {
-      detalhesPagamento.innerHTML = `
-        <div class="box-pix">
-          <p><strong>Pagamento via Pix</strong></p>
-          <p>Chave Pix: ${chavePix}</p>
-          <p>Ao enviar o pedido no WhatsApp, a chave Pix também vai junto na mensagem.</p>
-        </div>
-      `;
+      renderizarDetalhesPix();
     }
 
     if (metodo === "cartao") {
@@ -415,7 +552,9 @@ formPagamento.addEventListener("submit", function (e) {
   let infoPagamento = "";
 
   if (metodoSelecionado.value === "pix") {
-    infoPagamento = `Pix\nChave Pix: ${chavePix}`;
+    infoPagamento = `Pix
+Chave Pix: ${chavePix}
+Enviar comprovante para o WhatsApp: ${whatsappLoja}`;
   }
 
   if (metodoSelecionado.value === "cartao") {
@@ -466,7 +605,9 @@ Número: ${dadosCliente.numero}
 Referência: ${dadosCliente.referencia || "-"}
 
 *Forma de pagamento*
-${infoPagamento}`;
+${infoPagamento}
+
+${metodoSelecionado.value === "pix" ? "*Aviso:* vou enviar o comprovante do Pix neste WhatsApp." : ""}`;
 
   const linkWhatsApp = `https://wa.me/${whatsappLoja}?text=${encodeURIComponent(mensagem)}`;
 
@@ -481,6 +622,7 @@ ${infoPagamento}`;
   atualizarCarrinhoBar();
   renderizarCarrinho();
 });
+
 // MODAIS DE INFORMACAO
 const abrirBeneficios = document.getElementById("abrirBeneficios");
 const abrirHistoria = document.getElementById("abrirHistoria");
