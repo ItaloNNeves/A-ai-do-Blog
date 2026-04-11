@@ -76,6 +76,11 @@ const whatsappLoja = "5575981449511";
 const chavePix = "75982988444";
 const nomeRecebedorPix = "ACAI DO BLOG";
 const cidadeRecebedorPix = "SALVADOR";
+const enderecoRetirada = {
+  bairro: "Santo Antônio",
+  rua: "Rua São Pedro",
+  numero: "25"
+};
 
 // MODAL PRODUTO
 const addBtns = document.querySelectorAll(".addprod");
@@ -112,6 +117,19 @@ const btnFinalizarPedido = document.getElementById("btnFinalizarPedido");
 const modalDados = document.getElementById("modalDados");
 const fecharDados = document.getElementById("fecharDados");
 const formDadosCliente = document.getElementById("formDadosCliente");
+
+const nomeClienteEl = document.getElementById("nomeCliente");
+const apelidoClienteEl = document.getElementById("apelidoCliente");
+const telefoneClienteEl = document.getElementById("telefoneCliente");
+const ruaClienteEl = document.getElementById("ruaCliente");
+const bairroClienteEl = document.getElementById("bairroCliente");
+const numeroCasaEl = document.getElementById("numeroCasa");
+const referenciaClienteEl = document.getElementById("referenciaCliente");
+
+const radiosTipoEntrega = document.querySelectorAll('input[name="tipoEntrega"]');
+const avisoEntrega = document.getElementById("avisoEntrega");
+const infoRetirada = document.getElementById("infoRetirada");
+const camposEntrega = document.getElementById("camposEntrega");
 
 // PAGAMENTO
 const modalPagamento = document.getElementById("modalPagamento");
@@ -170,12 +188,24 @@ function renderizarCarrinho() {
 
   let totalGeral = 0;
 
-  carrinho.forEach(function (item) {
+  if (carrinho.length === 0) {
+    listaCarrinho.innerHTML = `<p class="carrinho-vazio">Seu carrinho está vazio.</p>`;
+    totalCarrinhoEl.textContent = formatarMoeda(0);
+    totalPagamento.textContent = formatarMoeda(0);
+    return;
+  }
+
+  carrinho.forEach(function (item, indexItem) {
     totalGeral += item.total;
 
     listaCarrinho.innerHTML += `
       <div class="item-carrinho">
-        <h4>${item.produto.nome}</h4>
+        <div class="item-topo">
+          <h4>${item.produto.nome}</h4>
+          <button type="button" class="btn-remover-item" data-index="${indexItem}" title="Remover item">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
         ${item.qtd300 > 0 ? `<p>300ml x ${item.qtd300} = ${formatarMoeda(item.qtd300 * item.preco300)}</p>` : ""}
         ${item.qtd500 > 0 ? `<p>500ml x ${item.qtd500} = ${formatarMoeda(item.qtd500 * item.preco500)}</p>` : ""}
         <p><strong>Total do item: ${formatarMoeda(item.total)}</strong></p>
@@ -363,6 +393,56 @@ function renderizarDetalhesPix() {
   });
 }
 
+function configurarCamposEntrega(tipo) {
+  const isEntrega = tipo === "entrega";
+
+  avisoEntrega.classList.add("hidden");
+  infoRetirada.classList.add("hidden");
+
+  if (isEntrega) {
+    avisoEntrega.classList.remove("hidden");
+    camposEntrega.classList.remove("hidden");
+
+    ruaClienteEl.required = true;
+    bairroClienteEl.required = true;
+    numeroCasaEl.required = true;
+  } else if (tipo === "retirada") {
+    infoRetirada.classList.remove("hidden");
+    camposEntrega.classList.add("hidden");
+
+    ruaClienteEl.required = false;
+    bairroClienteEl.required = false;
+    numeroCasaEl.required = false;
+    referenciaClienteEl.required = false;
+
+    ruaClienteEl.value = "";
+    bairroClienteEl.value = "";
+    numeroCasaEl.value = "";
+    referenciaClienteEl.value = "";
+  }
+}
+
+function resetarFormularioDados() {
+  formDadosCliente.reset();
+  avisoEntrega.classList.add("hidden");
+  infoRetirada.classList.add("hidden");
+  camposEntrega.classList.remove("hidden");
+
+  ruaClienteEl.required = false;
+  bairroClienteEl.required = false;
+  numeroCasaEl.required = false;
+}
+
+function removerItemCarrinho(indexItem) {
+  carrinho.splice(indexItem, 1);
+  atualizarCarrinhoBar();
+  renderizarCarrinho();
+
+  if (carrinho.length === 0) {
+    modalCarrinho.classList.remove("ativo");
+  }
+}
+
 // ABRIR PRODUTO
 addBtns.forEach(function (botao) {
   botao.addEventListener("click", function (e) {
@@ -456,6 +536,15 @@ fecharCarrinho.addEventListener("click", function () {
   modalCarrinho.classList.remove("ativo");
 });
 
+listaCarrinho.addEventListener("click", function (e) {
+  const botaoRemover = e.target.closest(".btn-remover-item");
+
+  if (!botaoRemover) return;
+
+  const indexItem = Number(botaoRemover.dataset.index);
+  removerItemCarrinho(indexItem);
+});
+
 // IR PARA DADOS
 btnFinalizarPedido.addEventListener("click", function () {
   if (carrinho.length === 0) {
@@ -472,26 +561,47 @@ fecharDados.addEventListener("click", function () {
   modalDados.classList.remove("ativo");
 });
 
+// ENTREGA OU RETIRADA
+radiosTipoEntrega.forEach(function (radio) {
+  radio.addEventListener("change", function () {
+    configurarCamposEntrega(this.value);
+  });
+});
+
 // FORMULARIO DE DADOS
 formDadosCliente.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const telefoneDigitado = document.getElementById("telefoneCliente").value;
+  const telefoneDigitado = telefoneClienteEl.value;
   const telefoneLimpo = limparTelefone(telefoneDigitado);
+  const tipoSelecionado = document.querySelector('input[name="tipoEntrega"]:checked');
+
+  if (!tipoSelecionado) {
+    alert("Selecione entrega ou retirada.");
+    return;
+  }
 
   if (telefoneLimpo.length < 10 || telefoneLimpo.length > 11) {
     alert("Digite um telefone válido com DDD.");
     return;
   }
 
+  if (tipoSelecionado.value === "entrega") {
+    if (!ruaClienteEl.value.trim() || !bairroClienteEl.value.trim() || !numeroCasaEl.value.trim()) {
+      alert("Preencha os dados de endereço para entrega.");
+      return;
+    }
+  }
+
   dadosCliente = {
-    nome: document.getElementById("nomeCliente").value,
-    apelido: document.getElementById("apelidoCliente").value,
+    tipoEntrega: tipoSelecionado.value,
+    nome: nomeClienteEl.value.trim(),
+    apelido: apelidoClienteEl.value.trim(),
     telefone: telefoneLimpo,
-    rua: document.getElementById("ruaCliente").value,
-    bairro: document.getElementById("bairroCliente").value,
-    numero: document.getElementById("numeroCasa").value,
-    referencia: document.getElementById("referenciaCliente").value
+    rua: tipoSelecionado.value === "entrega" ? ruaClienteEl.value.trim() : "",
+    bairro: tipoSelecionado.value === "entrega" ? bairroClienteEl.value.trim() : "",
+    numero: tipoSelecionado.value === "entrega" ? numeroCasaEl.value.trim() : "",
+    referencia: tipoSelecionado.value === "entrega" ? referenciaClienteEl.value.trim() : ""
   };
 
   localStorage.setItem("dadosCliente", JSON.stringify(dadosCliente));
@@ -520,7 +630,7 @@ document.querySelectorAll('input[name="pagamento"]').forEach(function (radio) {
       detalhesPagamento.innerHTML = `
         <div class="box-cartao">
           <p><strong>Pagamento em cartão</strong></p>
-          <p>O pagamento será realizado na entrega ou retirada.</p>
+          <p>O pagamento será realizado na ${dadosCliente && dadosCliente.tipoEntrega === "retirada" ? "retirada" : "entrega"}.</p>
         </div>
       `;
     }
@@ -590,6 +700,27 @@ Enviar comprovante para o WhatsApp: ${whatsappLoja}`;
 
   localStorage.setItem("pedidoFinal", JSON.stringify(pedidoFinal));
 
+  const blocoEntregaOuRetirada =
+    dadosCliente.tipoEntrega === "entrega"
+      ? `*Tipo do pedido*
+Entrega
+
+*Endereço de entrega*
+Rua: ${dadosCliente.rua}
+Bairro: ${dadosCliente.bairro}
+Número: ${dadosCliente.numero}
+Referência: ${dadosCliente.referencia || "-"}
+
+*Atenção*
+Tenho ciência de que a taxa de entrega é a partir de R$ 5,00 e o valor exato será enviado no WhatsApp conforme a localização.`
+      : `*Tipo do pedido*
+Retirada
+
+*Local de retirada*
+Bairro: ${enderecoRetirada.bairro}
+Rua: ${enderecoRetirada.rua}
+Número: ${enderecoRetirada.numero}`;
+
   const mensagem =
 `Olá! Quero fazer este pedido:
 
@@ -599,10 +730,8 @@ ${montarTextoItensCarrinho()}*Total do pedido:* ${formatarMoeda(totalPedido)}
 Nome: ${dadosCliente.nome}
 Apelido: ${dadosCliente.apelido || "-"}
 Telefone: ${dadosCliente.telefone}
-Rua: ${dadosCliente.rua}
-Bairro: ${dadosCliente.bairro}
-Número: ${dadosCliente.numero}
-Referência: ${dadosCliente.referencia || "-"}
+
+${blocoEntregaOuRetirada}
 
 *Forma de pagamento*
 ${infoPagamento}
@@ -618,7 +747,10 @@ ${metodoSelecionado.value === "pix" ? "*Aviso:* vou enviar o comprovante do Pix 
   formPagamento.reset();
   detalhesPagamento.innerHTML = "";
 
+  resetarFormularioDados();
+
   carrinho = [];
+  dadosCliente = null;
   atualizarCarrinhoBar();
   renderizarCarrinho();
 });
@@ -654,3 +786,8 @@ fecharBeneficios.addEventListener("click", function () {
 fecharHistoria.addEventListener("click", function () {
   modalHistoria.classList.remove("ativo");
 });
+
+// ESTADO INICIAL
+renderizarCarrinho();
+atualizarCarrinhoBar();
+resetarFormularioDados();

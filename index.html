@@ -204,14 +204,42 @@
                 <h3>Seus dados</h3>
 
                 <form id="formDadosCliente" class="formpedido">
+                    <div class="grupo-entrega-retirada">
+                        <p class="subtitulo-form">Como você quer receber?</p>
+
+                        <label class="opcao-entrega">
+                            <input type="radio" name="tipoEntrega" value="entrega" required>
+                            <span>Entrega</span>
+                        </label>
+
+                        <div class="info-tipo-pedido hidden" id="avisoEntrega">
+                            A taxa de entrega é a partir de <strong>R$ 5,00</strong>. O valor exato será enviado no
+                            WhatsApp e depende da sua localização.
+                        </div>
+
+                        <label class="opcao-entrega">
+                            <input type="radio" name="tipoEntrega" value="retirada" required>
+                            <span>Retirada</span>
+                        </label>
+
+                        <div class="info-tipo-pedido hidden" id="infoRetirada">
+                            <p><strong>Endereço para retirada:</strong></p>
+                            <p>Bairro Santo Antônio</p>
+                            <p>Rua São Pedro, casa 25</p>
+                        </div>
+                    </div>
+
                     <input type="text" id="nomeCliente" placeholder="Seu nome" required>
                     <input type="text" id="apelidoCliente" placeholder="Apelido">
                     <input type="tel" id="telefoneCliente" placeholder="Telefone com DDD (ex: 11987654321)"
                         inputmode="numeric" required>
-                    <input type="text" id="ruaCliente" placeholder="Nome da rua" required>
-                    <input type="text" id="bairroCliente" placeholder="Bairro" required>
-                    <input type="text" id="numeroCasa" placeholder="Número da casa" required>
-                    <input type="text" id="referenciaCliente" placeholder="Ponto de referência">
+
+                    <div id="camposEntrega">
+                        <input type="text" id="ruaCliente" placeholder="Nome da rua">
+                        <input type="text" id="bairroCliente" placeholder="Bairro">
+                        <input type="text" id="numeroCasa" placeholder="Número da casa">
+                        <input type="text" id="referenciaCliente" placeholder="Ponto de referência">
+                    </div>
 
                     <button type="submit" class="btnfinalizar">Continuar para pagamento</button>
                 </form>
@@ -251,12 +279,13 @@
                 </form>
             </div>
         </div>
+
         <!-- MODAL BENEFICIOS -->
         <div class="modalinfo" id="modalBeneficios">
             <div class="modalinfo-box">
                 <div class="booxxmod">
                     <button class="fecharmodalinfo" id="fecharBeneficios">&times;</button>
-                <h3>Benefícios</h3>
+                    <h3>Benefícios</h3>
                 </div>
 
                 <div class="conteudo-info">
@@ -288,7 +317,7 @@
             <div class="modalinfo-box">
                 <div class="booxxmod">
                     <button class="fecharmodalinfo" id="fecharHistoria">&times;</button>
-                <h3>Nossa História</h3>
+                    <h3>Nossa História</h3>
                 </div>
 
                 <div class="conteudo-info">
@@ -319,6 +348,7 @@
                 </div>
             </div>
         </div>
+
         <div class="avl">
             <h4>Feedbacks de clientes</h4>
 
@@ -380,12 +410,14 @@
             </article>
         </div>
     </main>
+
     <footer>
         <h2> Açai do Blog </h2>
         <a target="_blank" href="https://www.instagram.com/acai_do_blog/" class="icon-insta"><i
                 class="fa-brands fa-instagram"></i></a>
         <p>&copy; Açai do Blog - Nilton Lobo. Todos os direitos reservados.</p>
     </footer>
+
     <script src="./main.js"></script>
 </body>
 
