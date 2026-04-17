@@ -63,6 +63,45 @@
                 </div>
             </div>
         </div>
+        <div class="saboresgar secoesespeciais">
+            <div class="titlesabores">
+                <h3>Delícias especiais</h3>
+                <div class="seta">
+                    <div><i class="fa-solid fa-arrow-left setleft"></i></div>
+                    <div><i class="fa-solid fa-arrow-right setright"></i></div>
+                </div>
+            </div>
+
+            <div class="boxsabores">
+                <article class="uni-box-sab" data-id="5" data-nome="Pavê de Maracujá" data-preco300="10"
+                    data-preco500="" data-label300="Unidade" data-label500="">
+                    <p class="toplever">Novo</p>
+                    <img class="img-produc" src="./imagens/img-pav-maracuja.png" alt="">
+                    <h4>Pavê de Maracujá</h4>
+                    <p class="desc-box">Sobremesa cremosa de maracujá, doce na medida certa e perfeita para completar o
+                        seu pedido.</p>
+                    <div class="price-add">
+                        <div class="ofert-price">
+                            <p class="oferr-p">R$12</p>
+                            <p class="price">R$10</p>
+                        </div>
+                        <a class="addprod" href="#"><i class="fa-solid fa-plus"></i></a>
+                    </div>
+                </article>
+
+                <article class="uni-box-sab" data-id="6" data-nome="Chocolate Quente" data-preco300="15"
+                    data-preco500="" data-label300="300 ml" data-label500="">
+                    <img class="img-produc" src="./imagens/img-choco-quent.png" alt="">
+                    <h4>Chocolate Quente</h4>
+                    <p class="desc-box">Chocolate quente cremoso e saboroso, servido na medida ideal para aquecer e
+                        adoçar o seu momento.</p>
+                    <div class="price-add">
+                        <p class="price">R$15</p>
+                        <a class="addprod" href="#"><i class="fa-solid fa-plus"></i></a>
+                    </div>
+                </article>
+            </div>
+        </div>
 
         <div class="saboresgar" id="sbid">
             <div class="titlesabores">
@@ -75,7 +114,7 @@
 
             <div class="boxsabores">
                 <article class="uni-box-sab" data-id="1" data-nome="Açaí com Nutella" data-preco300="15"
-                    data-preco500="20">
+                    data-preco500="20" data-label300="300 ml" data-label500="500 ml">
                     <p class="toplever">Mais vendido</p>
                     <img class="img-produc" src="./imagens/img-cai2.png" alt="">
                     <h4>Açaí com Nutella</h4>
@@ -88,7 +127,7 @@
                 </article>
 
                 <article class="uni-box-sab" data-id="2" data-nome="Açaí com Maracujá" data-preco300="15"
-                    data-preco500="20">
+                    data-preco500="20" data-label300="300 ml" data-label500="500 ml">
                     <img class="img-produc" src="./imagens/img-cai3.png" alt="">
                     <h4>Açaí com Maracujá</h4>
                     <p class="desc-box">Açaí com mousse de maracujá, combinando o doce com um toque cítrico refrescante.
@@ -100,7 +139,7 @@
                 </article>
 
                 <article class="uni-box-sab" data-id="3" data-nome="Açaí com Morango" data-preco300="15"
-                    data-preco500="20">
+                    data-preco500="20" data-label300="300 ml" data-label500="500 ml">
                     <img class="img-produc" src="./imagens/img-cai4.png" alt="">
                     <h4>Açaí com Morango</h4>
                     <p class="desc-box">Açaí batido com leite e mousse de morango, leve, doce e equilibrado.</p>
@@ -110,11 +149,11 @@
                     </div>
                 </article>
 
-                <article class="uni-box-sab" data-id="4" data-nome="Açaí com Limão" data-preco300="15"
-                    data-preco500="20">
-                    <img class="img-produc" src="./imagens/img-cai1.png" alt="">
-                    <h4>Açaí com Limão</h4>
-                    <p class="desc-box">Açaí com mousse de limão, refrescante e perfeito para qualquer momento.</p>
+                <article class="uni-box-sab" data-id="4" data-nome="Açaí com Ninho" data-preco300="15"
+                    data-preco500="20" data-label300="300 ml" data-label500="500 ml">
+                    <img class="img-produc" src="./imagens/acai-ninho-img.png" alt="">
+                    <h4>Açaí com ninho</h4>
+                    <p class="desc-box">Açaí com mousse de ninho, refrescante e perfeito para qualquer momento.</p>
                     <div class="price-add">
                         <p class="price">R$15-R$20</p>
                         <a class="addprod" href="#"><i class="fa-solid fa-plus"></i></a>
@@ -122,6 +161,7 @@
                 </article>
             </div>
         </div>
+
 
         <!-- MODAL PRODUTO -->
         <div class="modalpedido" id="modalpedido">
@@ -131,9 +171,9 @@
                 <div class="etapa etapa1" id="etapa1">
                     <h3 id="nomeProdutoModal">Produto</h3>
 
-                    <div class="linha-opcao">
+                    <div class="linha-opcao" id="linhaOpcao300">
                         <div>
-                            <p class="tam-title">300 ml</p>
+                            <p class="tam-title" id="label300">300 ml</p>
                             <p class="tam-preco">R$ <span id="preco300">15</span></p>
                         </div>
 
@@ -144,9 +184,9 @@
                         </div>
                     </div>
 
-                    <div class="linha-opcao">
+                    <div class="linha-opcao" id="linhaOpcao500">
                         <div>
-                            <p class="tam-title">500 ml</p>
+                            <p class="tam-title" id="label500">500 ml</p>
                             <p class="tam-preco">R$ <span id="preco500">20</span></p>
                         </div>
 
@@ -296,7 +336,7 @@
 
                     <p>
                         Além da praticidade, ele permite variar os sabores e escolher combinações que agradam diferentes
-                        gostos, como opções com Nutella, morango, limão e maracujá.
+                        gostos, como opções com Nutella, morango, ninho e maracujá.
                     </p>
 
                     <p>

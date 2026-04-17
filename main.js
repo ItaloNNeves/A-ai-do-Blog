@@ -29,22 +29,26 @@ window.addEventListener("resize", function () {
   }
 });
 
-// ROLAGEM HORIZONTAL
-const cards = document.querySelector(".boxsabores");
-const esq = document.querySelector(".setleft");
-const dir = document.querySelector(".setright");
+// ROLAGEM HORIZONTAL DAS SECOES
+const secoesProdutos = document.querySelectorAll(".saboresgar");
 
-if (dir) {
-  dir.addEventListener("click", function () {
-    cards.scrollLeft += 300;
-  });
-}
+secoesProdutos.forEach(function (secao) {
+  const cards = secao.querySelector(".boxsabores");
+  const esq = secao.querySelector(".setleft");
+  const dir = secao.querySelector(".setright");
 
-if (esq) {
-  esq.addEventListener("click", function () {
-    cards.scrollLeft -= 300;
-  });
-}
+  if (dir && cards) {
+    dir.addEventListener("click", function () {
+      cards.scrollLeft += 300;
+    });
+  }
+
+  if (esq && cards) {
+    esq.addEventListener("click", function () {
+      cards.scrollLeft -= 300;
+    });
+  }
+});
 
 // BANNER
 const slider = document.querySelector(".imgbnn");
@@ -90,6 +94,11 @@ const fecharModal = document.getElementById("fecharmodal");
 const nomeProdutoModal = document.getElementById("nomeProdutoModal");
 const preco300El = document.getElementById("preco300");
 const preco500El = document.getElementById("preco500");
+
+const label300El = document.getElementById("label300");
+const label500El = document.getElementById("label500");
+const linhaOpcao300 = document.getElementById("linhaOpcao300");
+const linhaOpcao500 = document.getElementById("linhaOpcao500");
 
 const qtd300El = document.getElementById("qtd300");
 const qtd500El = document.getElementById("qtd500");
@@ -151,19 +160,23 @@ function formatarMoeda(valor) {
   return `R$ ${valor.toFixed(2).replace(".", ",")}`;
 }
 
+function produtoTemOpcao500() {
+  return produtoAtual && produtoAtual.preco500 !== null && !isNaN(produtoAtual.preco500);
+}
+
 function atualizarTotal() {
   qtd300El.textContent = qtd300;
   qtd500El.textContent = qtd500;
 
-  const total = (qtd300 * preco300) + (qtd500 * preco500);
+  const total = (qtd300 * preco300) + (qtd500 * (produtoTemOpcao500() ? preco500 : 0));
   totalPedidoEl.textContent = formatarMoeda(total);
 }
 
 function resetarModalProduto() {
   qtd300 = 0;
   qtd500 = 0;
-  preco300 = 15;
-  preco500 = 20;
+  preco300 = produtoAtual ? produtoAtual.preco300 : 15;
+  preco500 = produtoAtual && produtoTemOpcao500() ? produtoAtual.preco500 : 0;
   atualizarTotal();
 }
 
@@ -206,8 +219,8 @@ function renderizarCarrinho() {
             <i class="fa-solid fa-trash"></i>
           </button>
         </div>
-        ${item.qtd300 > 0 ? `<p>300ml x ${item.qtd300} = ${formatarMoeda(item.qtd300 * item.preco300)}</p>` : ""}
-        ${item.qtd500 > 0 ? `<p>500ml x ${item.qtd500} = ${formatarMoeda(item.qtd500 * item.preco500)}</p>` : ""}
+        ${item.qtd300 > 0 ? `<p>${item.label300} x ${item.qtd300} = ${formatarMoeda(item.qtd300 * item.preco300)}</p>` : ""}
+        ${item.qtd500 > 0 ? `<p>${item.label500} x ${item.qtd500} = ${formatarMoeda(item.qtd500 * item.preco500)}</p>` : ""}
         <p><strong>Total do item: ${formatarMoeda(item.total)}</strong></p>
       </div>
     `;
@@ -238,13 +251,13 @@ function gerarResumoPedido() {
       sabor: item.produto.nome,
       tamanhos: [
         item.qtd300 > 0 ? {
-          tamanho: "300ml",
+          tamanho: item.label300,
           quantidade: item.qtd300,
           valorUnitario: item.preco300,
           subtotal: item.qtd300 * item.preco300
         } : null,
         item.qtd500 > 0 ? {
-          tamanho: "500ml",
+          tamanho: item.label500,
           quantidade: item.qtd500,
           valorUnitario: item.preco500,
           subtotal: item.qtd500 * item.preco500
@@ -262,11 +275,11 @@ function montarTextoItensCarrinho() {
     texto += `*${item.produto.nome}*\n`;
 
     if (item.qtd300 > 0) {
-      texto += `- 300ml x ${item.qtd300} = ${formatarMoeda(item.qtd300 * item.preco300)}\n`;
+      texto += `- ${item.label300} x ${item.qtd300} = ${formatarMoeda(item.qtd300 * item.preco300)}\n`;
     }
 
     if (item.qtd500 > 0) {
-      texto += `- 500ml x ${item.qtd500} = ${formatarMoeda(item.qtd500 * item.preco500)}\n`;
+      texto += `- ${item.label500} x ${item.qtd500} = ${formatarMoeda(item.qtd500 * item.preco500)}\n`;
     }
 
     texto += `Subtotal: ${formatarMoeda(item.total)}\n\n`;
@@ -277,10 +290,6 @@ function montarTextoItensCarrinho() {
 
 function removerAcentos(texto) {
   return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
-
-function somenteNumeros(texto) {
-  return texto.replace(/\D/g, "");
 }
 
 function formatarCampoPix(id, valor) {
@@ -443,28 +452,48 @@ function removerItemCarrinho(indexItem) {
   }
 }
 
+function configurarModalProduto() {
+  if (!produtoAtual) return;
+
+  nomeProdutoModal.textContent = produtoAtual.nome;
+
+  label300El.textContent = produtoAtual.label300 || "Opção";
+  preco300El.textContent = produtoAtual.preco300.toFixed(2).replace(".", ",");
+
+  if (produtoTemOpcao500()) {
+    linhaOpcao500.classList.remove("hidden");
+    label500El.textContent = produtoAtual.label500 || "Opção 2";
+    preco500El.textContent = produtoAtual.preco500.toFixed(2).replace(".", ",");
+  } else {
+    linhaOpcao500.classList.add("hidden");
+    qtd500 = 0;
+  }
+
+  linhaOpcao300.classList.remove("hidden");
+  resetarModalProduto();
+}
+
 // ABRIR PRODUTO
 addBtns.forEach(function (botao) {
   botao.addEventListener("click", function (e) {
     e.preventDefault();
 
     const card = botao.closest(".uni-box-sab");
+    const preco500Data = card.dataset.preco500 ? Number(card.dataset.preco500) : null;
 
     produtoAtual = {
       id: card.dataset.id,
       nome: card.dataset.nome,
       preco300: Number(card.dataset.preco300),
-      preco500: Number(card.dataset.preco500)
+      preco500: preco500Data,
+      label300: card.dataset.label300 || "300 ml",
+      label500: card.dataset.label500 || "500 ml"
     };
 
     preco300 = produtoAtual.preco300;
-    preco500 = produtoAtual.preco500;
+    preco500 = produtoTemOpcao500() ? produtoAtual.preco500 : 0;
 
-    nomeProdutoModal.textContent = produtoAtual.nome;
-    preco300El.textContent = preco300.toFixed(2).replace(".", ",");
-    preco500El.textContent = preco500.toFixed(2).replace(".", ",");
-
-    resetarModalProduto();
+    configurarModalProduto();
     modal.classList.add("ativo");
   });
 });
@@ -487,6 +516,8 @@ mais300.addEventListener("click", function () {
 });
 
 menos500.addEventListener("click", function () {
+  if (!produtoTemOpcao500()) return;
+
   if (qtd500 > 0) {
     qtd500--;
     atualizarTotal();
@@ -494,6 +525,8 @@ menos500.addEventListener("click", function () {
 });
 
 mais500.addEventListener("click", function () {
+  if (!produtoTemOpcao500()) return;
+
   qtd500++;
   atualizarTotal();
 });
@@ -510,12 +543,14 @@ btnAddCarrinho.addEventListener("click", function () {
       id: produtoAtual.id,
       nome: produtoAtual.nome
     },
+    label300: produtoAtual.label300,
+    label500: produtoAtual.label500,
     preco300: preco300,
-    preco500: preco500,
+    preco500: produtoTemOpcao500() ? preco500 : 0,
     qtd300: qtd300,
-    qtd500: qtd500,
-    quantidadeTotal: qtd300 + qtd500,
-    total: (qtd300 * preco300) + (qtd500 * preco500)
+    qtd500: produtoTemOpcao500() ? qtd500 : 0,
+    quantidadeTotal: qtd300 + (produtoTemOpcao500() ? qtd500 : 0),
+    total: (qtd300 * preco300) + ((produtoTemOpcao500() ? qtd500 : 0) * (produtoTemOpcao500() ? preco500 : 0))
   };
 
   carrinho.push(itemCarrinho);
